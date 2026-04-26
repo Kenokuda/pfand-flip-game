@@ -1,0 +1,777 @@
+/* ============================================
+   PFAND FLIP! - Game Styles
+   Theme: German Supermarket Arcade
+   ============================================ */
+
+:root {
+    /* Primary Palette - German Supermarket vibes */
+    --clr-bg-deep: #0a0e1a;
+    --clr-bg: #111827;
+    --clr-bg-light: #1e293b;
+    --clr-surface: #1e3a5f;
+    --clr-primary: #00d4aa;
+    --clr-primary-glow: rgba(0, 212, 170, 0.4);
+    --clr-accent: #ff6b35;
+    --clr-accent-hot: #ff3d00;
+    --clr-gold: #ffd700;
+    --clr-gold-glow: rgba(255, 215, 0, 0.5);
+    --clr-text: #f0f4f8;
+    --clr-text-dim: #94a3b8;
+    --clr-danger: #ef4444;
+    --clr-success: #22c55e;
+    --clr-blue: #3b82f6;
+
+    /* Coupon colors */
+    --coupon-bg: #fefce8;
+    --coupon-border: #d4a017;
+    --coupon-text: #1a1a2e;
+    --coupon-accent: #c0392b;
+
+    /* Typography */
+    --font-display: 'Bangers', cursive;
+    --font-body: 'Fredoka', sans-serif;
+    --font-pixel: 'Press Start 2P', monospace;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 40px;
+    --space-2xl: 64px;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--clr-bg-deep);
+    font-family: var(--font-body);
+    color: var(--clr-text);
+    cursor: crosshair;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ============================================
+   CANVAS
+   ============================================ */
+#gameCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* ============================================
+   SCREENS
+   ============================================ */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+    pointer-events: none;
+}
+
+.screen.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+/* ============================================
+   TITLE SCREEN
+   ============================================ */
+#titleScreen {
+    background: radial-gradient(ellipse at 50% 30%, rgba(0, 212, 170, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 40%),
+                var(--clr-bg-deep);
+    z-index: 100;
+}
+
+.title-container {
+    text-align: center;
+    animation: titleFadeIn 1s ease-out;
+}
+
+@keyframes titleFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.title-bottle-icon {
+    font-size: 80px;
+    animation: bottleBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px var(--clr-primary-glow));
+}
+
+@keyframes bottleBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(5deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(-10px) rotate(-3deg); }
+}
+
+.game-title {
+    font-family: var(--font-display);
+    font-size: clamp(60px, 12vw, 120px);
+    letter-spacing: 8px;
+    line-height: 0.9;
+    color: var(--clr-text);
+    text-shadow: 
+        0 0 20px var(--clr-primary-glow),
+        0 4px 0 rgba(0, 0, 0, 0.3),
+        3px 3px 0 var(--clr-primary);
+    margin: var(--space-md) 0;
+}
+
+.title-flip {
+    color: var(--clr-accent);
+    font-size: 1.3em;
+    text-shadow: 
+        0 0 30px rgba(255, 107, 53, 0.5),
+        0 4px 0 rgba(0, 0, 0, 0.3),
+        3px 3px 0 var(--clr-accent-hot);
+    display: inline-block;
+    animation: flipPulse 3s ease-in-out infinite;
+}
+
+@keyframes flipPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 2.5vw, 20px);
+    color: var(--clr-text-dim);
+    margin: var(--space-lg) 0 var(--space-xl);
+    font-weight: 400;
+}
+
+/* Buttons */
+.btn-primary {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 4px;
+    padding: 18px 60px;
+    background: linear-gradient(135deg, var(--clr-primary), #00b894);
+    color: var(--clr-bg-deep);
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all 0.2s ease;
+    box-shadow: 
+        0 6px 0 #009d7a,
+        0 8px 20px rgba(0, 212, 170, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::after {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 0 #009d7a,
+        0 12px 30px rgba(0, 212, 170, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #009d7a,
+        0 4px 10px rgba(0, 212, 170, 0.2);
+}
+
+.btn-icon {
+    font-size: 0.8em;
+}
+
+/* Instructions */
+.title-instructions {
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 16px;
+    color: var(--clr-text-dim);
+    opacity: 0;
+    animation: instrFade 0.5s ease forwards;
+}
+
+.instruction-item:nth-child(1) { animation-delay: 0.5s; }
+.instruction-item:nth-child(2) { animation-delay: 0.7s; }
+.instruction-item:nth-child(3) { animation-delay: 0.9s; }
+
+@keyframes instrFade {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.instruction-icon {
+    font-size: 24px;
+}
+
+/* ============================================
+   GAME HUD
+   ============================================ */
+#gameHUD {
+    z-index: 50;
+}
+
+#gameHUD.active {
+    display: block;
+    pointer-events: none;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--space-lg);
+}
+
+.hud-score, .hud-lives {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: var(--space-md) var(--space-lg);
+    min-width: 120px;
+    text-align: center;
+}
+
+.hud-label {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--clr-text-dim);
+    letter-spacing: 2px;
+    margin-bottom: var(--space-xs);
+}
+
+.hud-value {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--clr-gold);
+    text-shadow: 0 0 15px var(--clr-gold-glow);
+    line-height: 1;
+}
+
+.hud-unit {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    color: var(--clr-primary);
+    margin-top: 2px;
+}
+
+.hud-hearts {
+    font-size: 24px;
+    letter-spacing: 4px;
+}
+
+.hud-combo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.hud-combo #comboCount {
+    font-family: var(--font-display);
+    font-size: 100px;
+    color: var(--clr-accent);
+    text-shadow: 
+        0 0 40px rgba(255, 107, 53, 0.6),
+        3px 3px 0 rgba(0, 0, 0, 0.5);
+    line-height: 1;
+    display: block;
+}
+
+.combo-label {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--clr-gold);
+    text-shadow: 0 0 20px var(--clr-gold-glow);
+    letter-spacing: 6px;
+    display: block;
+}
+
+/* ============================================
+   RESULT SCREEN
+   ============================================ */
+#resultScreen {
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+    z-index: 200;
+}
+
+.result-container {
+    width: 100%;
+    max-width: 500px;
+    padding: var(--space-lg);
+}
+
+.result-phase {
+    display: none;
+}
+
+.result-phase.active {
+    display: block;
+    animation: phaseIn 0.5s ease;
+}
+
+@keyframes phaseIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Conveyor / Pfandautomat */
+.conveyor-title {
+    font-family: var(--font-display);
+    font-size: 42px;
+    color: var(--clr-primary);
+    text-align: center;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--clr-primary-glow);
+    margin-bottom: var(--space-lg);
+}
+
+.conveyor-machine {
+    background: linear-gradient(180deg, #2d3748, #1a202c);
+    border-radius: 20px;
+    padding: var(--space-xl) var(--space-lg);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.machine-slot {
+    width: 120px;
+    height: 60px;
+    margin: 0 auto var(--space-lg);
+    position: relative;
+}
+
+.slot-opening {
+    width: 100%;
+    height: 100%;
+    background: #0a0e1a;
+    border-radius: 12px;
+    border: 3px solid #4a5568;
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+.conveyor-bottle {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 50px;
+    animation: bottleInsert 2s ease-in forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes bottleInsert {
+    0% { top: -80px; opacity: 1; }
+    60% { top: 10px; opacity: 1; }
+    80% { top: 10px; opacity: 1; }
+    100% { top: 50px; opacity: 0; }
+}
+
+.machine-display {
+    background: #0a1a0a;
+    border: 2px solid #2d5a2d;
+    border-radius: 8px;
+    padding: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    color: var(--clr-success);
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    position: relative;
+    overflow: hidden;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scanning-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--clr-success);
+    box-shadow: 0 0 10px var(--clr-success);
+    animation: scanLine 1.5s linear infinite;
+}
+
+@keyframes scanLine {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+
+.machine-lights {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.light {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #333;
+    border: 2px solid #555;
+}
+
+.light-1 { animation: lightBlink 1s 0s infinite; }
+.light-2 { animation: lightBlink 1s 0.3s infinite; }
+.light-3 { animation: lightBlink 1s 0.6s infinite; }
+
+@keyframes lightBlink {
+    0%, 49% { background: #333; box-shadow: none; }
+    50%, 100% { background: var(--clr-success); box-shadow: 0 0 10px var(--clr-success); }
+}
+
+.conveyor-subtitle {
+    text-align: center;
+    color: var(--clr-text-dim);
+    margin-top: var(--space-lg);
+    font-size: 16px;
+    animation: dotPulse 1.5s infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Coupon Card */
+.coupon-card {
+    background: var(--coupon-bg);
+    border: 3px dashed var(--coupon-border);
+    border-radius: 16px;
+    padding: var(--space-lg);
+    color: var(--coupon-text);
+    position: relative;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 6px rgba(212, 160, 23, 0.2);
+    transform: scale(0);
+    animation: couponReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes couponReveal {
+    from { transform: scale(0) rotate(-10deg); }
+    to { transform: scale(1) rotate(0deg); }
+}
+
+.coupon-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.coupon-logo {
+    font-size: 40px;
+}
+
+.coupon-store {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--coupon-accent);
+    letter-spacing: 3px;
+}
+
+.store-highlight {
+    color: var(--coupon-border);
+}
+
+.coupon-divider {
+    border-top: 2px dashed var(--coupon-border);
+    margin: var(--space-md) 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.scissors {
+    position: absolute;
+    top: -12px;
+    background: var(--coupon-bg);
+    padding: 0 var(--space-sm);
+}
+
+.coupon-body {
+    text-align: center;
+    padding: var(--space-md) 0;
+}
+
+.coupon-label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: var(--space-sm);
+}
+
+.coupon-amount {
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--coupon-accent);
+    text-shadow: 2px 2px 0 rgba(192, 57, 43, 0.2);
+    line-height: 1;
+    margin: var(--space-sm) 0;
+}
+
+.coupon-bottles {
+    font-size: 16px;
+    color: #555;
+    margin: var(--space-sm) 0;
+}
+
+.coupon-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.coupon-barcode {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1px;
+    height: 50px;
+    margin: var(--space-lg) auto;
+    max-width: 280px;
+}
+
+.coupon-barcode .bar {
+    background: #1a1a2e;
+    width: 2px;
+    border-radius: 1px;
+}
+
+.coupon-footer {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    border-top: 1px solid #e0d5b0;
+    padding-top: var(--space-sm);
+}
+
+.coupon-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid #e0d5b0;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--coupon-accent);
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.btn-retry {
+    display: flex;
+    margin: var(--space-lg) auto 0;
+    font-size: 24px;
+    background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent-hot));
+    box-shadow: 
+        0 6px 0 #c43a00,
+        0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn-retry:hover {
+    box-shadow: 
+        0 8px 0 #c43a00,
+        0 12px 30px rgba(255, 107, 53, 0.4);
+}
+
+.btn-retry:active {
+    box-shadow: 
+        0 2px 0 #c43a00,
+        0 4px 10px rgba(255, 107, 53, 0.2);
+}
+
+/* ============================================
+   PARTICLES
+   ============================================ */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFade 1s ease-out forwards;
+}
+
+@keyframes particleFade {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0); }
+}
+
+/* Hit effect */
+.hit-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 4;
+    animation: flashFade 0.3s ease-out forwards;
+}
+
+@keyframes flashFade {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Score popup */
+.score-popup {
+    position: fixed;
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--clr-gold);
+    text-shadow: 
+        0 0 10px var(--clr-gold-glow),
+        2px 2px 0 rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 60;
+    animation: scoreFloat 1s ease-out forwards;
+}
+
+@keyframes scoreFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+}
+
+/* Miss indicator */
+.miss-indicator {
+    position: fixed;
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--clr-danger);
+    text-shadow: 
+        0 0 15px rgba(239, 68, 68, 0.5),
+        2px 2px 0 rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 60;
+    animation: missFade 1s ease-out forwards;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes missFade {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 600px) {
+    .game-title {
+        letter-spacing: 4px;
+    }
+
+    .hud-value {
+        font-size: 36px;
+    }
+
+    .hud-combo #comboCount {
+        font-size: 60px;
+    }
+
+    .combo-label {
+        font-size: 22px;
+    }
+
+    .btn-primary {
+        font-size: 22px;
+        padding: 14px 40px;
+    }
+
+    .coupon-amount {
+        font-size: 48px;
+    }
+
+    .coupon-store {
+        font-size: 28px;
+    }
+}
