@@ -564,15 +564,15 @@
         drawBackground();
 
         if (state.phase === 'playing') {
-            // Spawn bottles only if there are no active bottles
-            if (state.bottles.length === 0) {
-                state.spawnTimer += dt * 16.67;
-                if (state.spawnTimer >= 800) { // 800ms delay before next bottle
-                    state.spawnTimer = 0;
-                    spawnBottle();
-                }
-            } else {
+            // Spawn bottles
+            state.spawnTimer += dt * 16.67;
+            if (state.spawnTimer >= state.spawnInterval) {
                 state.spawnTimer = 0;
+                spawnBottle();
+
+                // Gradually increase difficulty
+                state.difficulty += 0.05;
+                state.spawnInterval = Math.max(800, 2000 - state.difficulty * 50);
             }
 
             // Update bottles
@@ -644,8 +644,9 @@
         gameHUD.classList.add('active');
 
         updateHUD();
-        
-        // The game loop will automatically spawn the first bottle
+
+        // First bottle immediately
+        setTimeout(() => spawnBottle(), 500);
     }
 
     // ── End Game ──
